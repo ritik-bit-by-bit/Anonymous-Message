@@ -47,6 +47,11 @@ const UserSchema : Schema<User>= new Schema({
         type:String,
         required:true
     },
+    isVerified:{
+        type:Boolean,
+        required:true,
+        default:false
+    },
     verifyCode:{
         type:String,
         required:true
@@ -58,10 +63,11 @@ const UserSchema : Schema<User>= new Schema({
     isAcceptingMessage:{
         type:Boolean,
         required:true,
-        default:false
+        default:true
     },
     messages:[messageSchema]
 })
 
-const UserModel =(mongoose.models.User as mongoose.Model<User> || mongoose.model<User>("User",UserSchema))
+// Check if the model already exists to prevent recompilation
+const UserModel = mongoose.models.AnnonymousMessageUser || mongoose.model<User>("AnnonymousMessageUser", UserSchema);
 export default UserModel;

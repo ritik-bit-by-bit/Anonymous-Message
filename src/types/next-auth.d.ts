@@ -29,3 +29,8 @@ declare module 'next-auth/jwt'{
 
 }
 
+// types.ts
+export interface GeminiRequest {
+    prompt: string;
+  }
+  

@@ -10,33 +10,58 @@ export const authOptions: NextAuthOptions = {
             id:"credentials",
             name: "Credentials",
             credentials: {
-                Email: { label: "Email", type: "text", placeholder: "jsmith" },
+                identifier: { label: "Email/Username", type: "text", placeholder: "jsmith" },
                 password: { label: "Password", type: "password" }
               },
               async authorize(credentials, req): Promise<any> {
-                await dbConnect()
+                console.log("NextAuth authorize called with:", { 
+                  identifier: credentials?.identifier,
+                  password: credentials?.password ? "***" : "undefined"
+                });
+                
                 try {
-                 const user= await UserModel.findOne({
+                  await dbConnect();
+                  console.log("Database connected successfully");
+                  
+                  const user = await UserModel.findOne({
                     $or:[
-                        {email:credentials?.Email},
+                        {email:credentials?.identifier},
+                        {username:credentials?.identifier}
                     ]
-                   })
-                   if(!user){
+                  });
+                  
+                  console.log("User lookup result:", user ? { 
+                    id: user._id, 
+                    username: user.username, 
+                    email: user.email, 
+                    isVerified: user.isVerified 
+                  } : "No user found");
+                  
+                  if(!user){
+                    console.log("No user found");
                     throw new Error("No user found")
-                   }
-                   if(!user.isVerified){
+                  }
+                  
+                  if(!user.isVerified){
+                    console.log("User not verified");
                     throw new Error("Please verify your account")
-                   }
-                 const passwordMatch =  await bcrypt.compare(credentials?.password as string,user.password)
-                 if(!passwordMatch){
+                  }
+                  
+                  console.log("Checking password...");
+                  const passwordMatch = await bcrypt.compare(credentials?.password as string, user.password);
+                  console.log("Password match result:", passwordMatch);
+                  
+                  if(!passwordMatch){
+                    console.log("Password mismatch");
                     throw new Error("Invalid credentials")
-                 }
-                 else{
-                    return user;
-                 }
+                  }
+                  
+                  console.log("Authentication successful, returning user");
+                  return user;
                    
                 } catch (error) {
-                    throw new Error("Something went wrong")
+                  console.error("NextAuth authorize error:", error);
+                  throw error;
                 }
             }
         })       
@@ -49,13 +74,13 @@ export const authOptions: NextAuthOptions = {
     session:{
         strategy:"jwt"
     },
-    secret:process.env.NEXTAUTH_SECRET,
+    secret: process.env.NEXTAUTH_SECRET || "your-secret-key-here",
     callbacks:{
         async session({ session,token }) {
             if(token){
                 session.user._id=token._id;
                 session.user.isVerified=token.isVerified;
-                session.user.isAcceptingMessage=token.isAcceptingMessage;
+                session.user.isAcceptingMessages=token.isAcceptingMessage;
                 session.user.username=token.username;
             }
             return session
