@@ -26,10 +26,7 @@ const Page = () => {
 
   const form = useForm<z.infer<typeof signInSchema>>({
     resolver: zodResolver(signInSchema),
-    defaultValues: {
-      identifier: '',
-      password: '',
-    },
+    defaultValues: { identifier: '', password: '' },
   });
 
   const onSubmit = async (data: z.infer<typeof signInSchema>) => {
@@ -37,22 +34,35 @@ const Page = () => {
     try {
       const result = await signIn('credentials', {
         redirect: false,
+        callbackUrl: '/dashboard',
         identifier: data.identifier,
         password: data.password,
       });
+      console.log({"result":result,"result url":result?.url});
 
       if (result?.error) {
         toast({
           title: 'Sign In Failed',
-          description: result.error,
+          description:
+            result.error === 'CredentialsSignin'
+              ? 'Invalid credentials. Please try again.'
+              : result.error,
           variant: 'destructive',
         });
-      } else {
+      } else{
         toast({
           title: 'Success',
           description: 'Signed in successfully',
         });
-        router.replace('/dashboard');
+       
+      }
+      if(result?.url){
+        const url = new URL(result.url, window.location.origin);
+      if (url.origin === window.location.origin) {
+        router.push('/dashboard');
+      } else {
+        window.location.href = result.url;
+      }
       }
     } catch (error) {
       toast({

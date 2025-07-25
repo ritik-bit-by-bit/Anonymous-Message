@@ -1,5 +1,5 @@
 import dbConnect from "@/lib/dbConnect";
-import UserModel from "@/model/user";
+import UserModel from '@/model/user'
 
 export async function POST(request: Request) {
     console.log("VerifyCode route called");

@@ -39,6 +39,7 @@ export default function SignUpForm() {
       username: '',
       email: '',
       password: '',
+      
     },
   });
 
