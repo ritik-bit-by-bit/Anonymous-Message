@@ -3,6 +3,9 @@ import mongoose from 'mongoose'
 type connectionObject = {
     isConnected?: number
 }
+if (process.env.NODE_ENV !== 'production') {
+  require('dotenv').config();
+}
 
 const connection: connectionObject = {}
 
@@ -13,7 +16,7 @@ async function dbConnect(): Promise<void> {
     }
     
     try {
-        const db = await mongoose.connect("mongodb+srv://ritikroshanyadav9696:rascal1234@cluster0.lokbk.mongodb.net/AnonymousMessage")
+        const db = await mongoose.connect(process.env.MONGODB_URI!)
         connection.isConnected = db.connections[0].readyState
         console.log("db connected successfully")
     }
