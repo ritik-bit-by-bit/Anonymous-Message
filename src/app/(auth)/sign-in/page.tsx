@@ -59,7 +59,7 @@ const Page = () => {
       if(result?.url){
         const url = new URL(result.url, window.location.origin);
       if (url.origin === window.location.origin) {
-        router.push('/dashboard');
+        router.replace('/dashboard');
       } else {
         window.location.href = result.url;
       }
