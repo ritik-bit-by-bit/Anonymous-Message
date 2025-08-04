@@ -76,53 +76,88 @@ const Page = () => {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-800">
-      <div className="w-full max-w-md p-8 space-y-8 bg-white rounded-lg shadow-md">
-        <div className="text-center">
-          <h1 className="text-4xl font-extrabold tracking-tight lg:text-5xl mb-6">
-            Welcome Back to True Feedback
-          </h1>
-          <p className="mb-4">Sign in to continue your secret conversations</p>
-        </div>
-        <Form {...form}>
-          <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
-            <FormField
-              name="identifier"
-              control={form.control}
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Email/Username</FormLabel>
-                  <Input {...field} />
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <FormField
-              name="password"
-              control={form.control}
-              render={({ field }) => (
-                <FormItem>
-                  <FormLabel>Password</FormLabel>
-                  <Input type="password" {...field} />
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-            <Button type="submit" className="w-full" disabled={isSubmitting}>
-              {isSubmitting ? 'Signing In...' : 'Sign In'}
-            </Button>
-          </form>
-        </Form>
-        <div className="text-center mt-4">
-          <p>
-            Not a member yet?{' '}
-            <Link href="/sign-up" className="text-blue-600 hover:text-blue-800">
-              Sign up
-            </Link>
-          </p>
-        </div>
+    <div className="flex justify-center items-center min-h-screen bg-background p-4">
+  <div className="w-full max-w-md p-8 space-y-8 bg-card rounded-xl shadow-xl border border-border">
+    <div className="text-center space-y-4">
+      <h1 className="text-4xl font-extrabold tracking-tight lg:text-5xl text-foreground">
+        Welcome Back
+      </h1>
+      <div className="space-y-2">
+        <h2 className="text-xl font-semibold text-primary">True Feedback</h2>
+        <p className="text-muted-foreground">Sign in to continue your secret conversations</p>
       </div>
     </div>
+    
+    <Form {...form}>
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
+        <FormField
+          name="identifier"
+          control={form.control}
+          render={({ field }) => (
+            <FormItem className="space-y-2">
+              <FormLabel className="text-foreground font-medium">Email/Username</FormLabel>
+              <Input 
+                {...field} 
+                className="bg-muted border-input focus:border-ring focus:ring-2 focus:ring-ring/20 transition-all duration-200"
+              />
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <FormField
+          name="password"
+          control={form.control}
+          render={({ field }) => (
+            <FormItem className="space-y-2">
+              <FormLabel className="text-foreground font-medium">Password</FormLabel>
+              <Input 
+                type="password" 
+                {...field} 
+                className="bg-muted border-input focus:border-ring focus:ring-2 focus:ring-ring/20 transition-all duration-200"
+              />
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+        <Button 
+          type="submit" 
+          className="w-full bg-primary text-primary-foreground hover:bg-primary/90 py-3 font-semibold transition-colors duration-200" 
+          disabled={isSubmitting}
+        >
+          {isSubmitting ? (
+            <span className="flex items-center gap-2">
+              <div className="w-4 h-4 border-2 border-primary-foreground/30 border-t-primary-foreground rounded-full animate-spin"></div>
+              Signing In...
+            </span>
+          ) : (
+            'Sign In'
+          )}
+        </Button>
+      </form>
+    </Form>
+    
+    <div className="text-center">
+      <div className="relative">
+        <div className="absolute inset-0 flex items-center">
+          <span className="w-full border-t border-border" />
+        </div>
+        <div className="relative flex justify-center text-xs uppercase">
+          <span className="bg-card px-2 text-muted-foreground">or</span>
+        </div>
+      </div>
+      <p className="mt-4 text-muted-foreground">
+        Not a member yet?{' '}
+        <Link 
+          href="/sign-up" 
+          className="text-primary hover:text-primary/80 font-medium transition-colors duration-200 underline-offset-4 hover:underline"
+        >
+          Sign up
+        </Link>
+      </p>
+    </div>
+  </div>
+</div>
+
   );
 };
 

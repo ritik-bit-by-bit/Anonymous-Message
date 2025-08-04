@@ -70,6 +70,6 @@ export const authOptions: NextAuthOptions = {
   },
   secret: "ritikRoshanYadav",
   pages: {
-    signIn: '/sign-in',
+    // signIn: '/sign-in',
   },
 };

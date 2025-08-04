@@ -1,14 +1,6 @@
-import { StringExpressionOperatorReturningBoolean } from "mongoose";
-import NextAuth from "next-auth";
-import type { DefaultSession } from "next-auth";
+import 'next-auth'
 
 declare module 'next-auth'{
-    interface User{
-        _id?:string,
-        isVerified?:boolean,
-        isAcceptingMessages?:boolean,
-        username?:string
-    }
     interface Session{
         user:{
         _id?:string,
@@ -16,8 +8,14 @@ declare module 'next-auth'{
         isAcceptingMessages?:boolean,
         username?:string
     }& DefaultSession["user"]
-
-}
+  }
+interface User{
+        _id?:string ,
+        isVerified?:boolean,
+        isAcceptingMessages?:boolean,
+        username?:string
+    }
+    
 }
 
 declare module 'next-auth/jwt'{
@@ -30,8 +28,3 @@ declare module 'next-auth/jwt'{
 
 }
 
-// types.ts
-export interface GeminiRequest {
-    prompt: string;
-  }
-  

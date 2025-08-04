@@ -43,7 +43,7 @@ export async function POST(request: Request) {
         console.log("failed to update user Status to accept message");
         return Response.json({
             success:false,
-            message:"Unauthorized"
+            message:"Unauthorized",
         },{
       status:401
         })

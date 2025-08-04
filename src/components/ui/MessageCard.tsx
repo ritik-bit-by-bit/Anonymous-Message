@@ -32,12 +32,13 @@ export function MessageCard({ message, onMessageDelete }: MessageCardProps) {
   const handleDeleteConfirm = async () => {
     try {
       const response = await axios.delete<ApiResponse>(
-        `/api/delete-message/${message._id}`
+        `/api/deleteMessage/${message._id}`
       );
       toast({
         title: response.data.message,
+        variant: 'default',
       });
-    //   onMessageDelete(message._id);
+      onMessageDelete(message._id);
 
     } catch (error) {
       const axiosError = error as AxiosError<ApiResponse>;
@@ -61,7 +62,7 @@ export function MessageCard({ message, onMessageDelete }: MessageCardProps) {
                 <X className="w-5 h-5" />
               </Button>
             </AlertDialogTrigger>
-            <AlertDialogContent>
+            <AlertDialogContent className='bg-white'>
               <AlertDialogHeader>
                 <AlertDialogTitle>Are you absolutely sure?</AlertDialogTitle>
                 <AlertDialogDescription>
