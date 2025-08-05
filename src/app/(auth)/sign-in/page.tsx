@@ -57,12 +57,12 @@ const Page = () => {
        
       }
       if(result?.url){
-        const url = new URL(result.url, window.location.origin);
-      if (url.origin === window.location.origin) {
+      //   const url = new URL(result.url, window.location.origin);
+      // if (url.origin === window.location.origin) {
         router.replace('/dashboard');
-      } else {
-        window.location.href = result.url;
-      }
+      // } else {
+      //   window.location.href = result.url;
+      // }
       }
     } catch (error) {
       toast({
