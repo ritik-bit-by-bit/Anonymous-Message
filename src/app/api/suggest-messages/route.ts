@@ -1,32 +1,43 @@
-import { OpenAI } from 'openai';
 import { NextResponse } from 'next/server';
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
-});
+import { GoogleGenerativeAI } from '@google/generative-ai';
 
-export const runtime = 'edge';
+const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY!);
 
-export async function POST(req: Request) {
+export async function POST() {
   try {
-    const prompt =
-      "Create a list of three open-ended and engaging questions formatted as a single string. Each question should be separated by '||'. These questions are for an anonymous social messaging platform, like Qooh.me, and should be suitable for a diverse audience. Avoid personal or sensitive topics, focusing instead on universal themes that encourage friendly interaction. For example, your output should be structured like this: 'What’s a hobby you’ve recently started?||If you could have dinner with any historical figure, who would it be?||What’s a simple thing that makes you happy?'. Ensure the questions are intriguing, foster curiosity, and contribute to a positive and welcoming conversational environment.";
+    const model = genAI.getGenerativeModel({ model: 'gemma-3-1b-it' });
 
-    const response = await openai.chat.completions.create({
-      model: 'gpt-3.5-turbo',
-      messages: [{ role: 'user', content: prompt }],
-      max_tokens: 400,
-    });
+    const prompt = `
+Generate exactly 3 short anonymous messages.
+Return them in this format:
+"Just thinking about you||Hope your day is good||Sending you a smile"
+No line breaks, no bullet points, no labels like Message 1. Only use '||' to separate.
+`;
 
-    // Fetch the completion message from the response
-    const message = response.choices[0]?.message?.content;
+    const result = await model.generateContent(prompt);
+    const response = result.response;
+    let text = response.text().trim();
 
-    if (!message) {
-      return new NextResponse('No response from OpenAI', { status: 500 });
+    console.log("Gemini raw response:", text);
+
+    // Clean up labels like "Message 1||"
+    text = text
+      .replace(/Message\s*\d+\s*\|\|/gi, '')  // remove "Message 1||", "Message 2||", etc.
+      .replace(/\n/g, ' ')                    // remove newlines
+      .replace(/\s*\|\|\s*/g, '||')           // normalize separators
+      .trim();
+
+    // Ensure valid format
+    if (!text.includes('||')) {
+      return new NextResponse('Failed to parse stream string. No separator found.', { status: 500 });
     }
 
-    return new NextResponse(message);
+    return new NextResponse(text, {
+      status: 200,
+      headers: { 'Content-Type': 'text/plain' },
+    });
   } catch (error) {
-    console.error('An unexpected error occurred:', error);
-    return NextResponse.json({ message: 'An unexpected error occurred' }, { status: 500 });
+    console.error("Suggest error:", error);
+    return new NextResponse('Internal Server Error', { status: 500 });
   }
 }
