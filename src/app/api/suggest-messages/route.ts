@@ -1,10 +1,8 @@
 import { OpenAI } from 'openai';
 import { NextResponse } from 'next/server';
-
+import dotenv from 'dotenv'
 // Only require dotenv if we are in a Node.js environment, not in edge runtime
-if (process.env.NODE_ENV !== 'production') {
-  require('dotenv').config();
-}
+dotenv.config({ path: '.env.local' })
 
 const openai = new OpenAI({
   apiKey: process.env.OPENAI_API_KEY,

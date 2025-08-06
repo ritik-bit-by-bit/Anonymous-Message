@@ -40,8 +40,6 @@ import { exceptMessage } from '@/Schemas/acceptMessageSchema';
     try {
         
       const response= await axios.get<ApiResponse>('/api/AcceptMessage');
-      console.log(response.data);
-      console.log(response.data.isAcceptingMessages);
       setValue('acceptMessages', true);
     } catch (error) {
       const axiosError = error as AxiosError<ApiResponse>;
@@ -63,7 +61,6 @@ import { exceptMessage } from '@/Schemas/acceptMessageSchema';
       setIsSwitchLoading(false);
       try {
         const response = await axios.get<ApiResponse>('/api/getMessages');
-        console.log(response.data);
         setMessages(response.data.messages || []);
         if (refresh) {
           toast({
