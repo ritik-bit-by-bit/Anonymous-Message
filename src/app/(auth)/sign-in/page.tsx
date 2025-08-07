@@ -34,7 +34,7 @@ const Page = () => {
     try {
       const result = await signIn('credentials', {
         redirect: false,
-        callbackUrl: '/dashboard',
+        callbackUrl: `${window.location.origin}/dashboard`,
         identifier: data.identifier,
         password: data.password,
       });
@@ -48,6 +48,7 @@ const Page = () => {
               ? 'Invalid credentials. Please try again.'
               : result.error,
           variant: 'destructive',
+          
         });
       } else{
         toast({
@@ -59,7 +60,7 @@ const Page = () => {
       if(result?.url){
         const url = new URL(result.url, window.location.origin);
       if (url.origin === window.location.origin) {
-        router.replace('/dashboard');
+        router.replace(result.url);
       } else {
         window.location.href = result.url;
       }
