@@ -48,22 +48,21 @@ const Page = () => {
               ? 'Invalid credentials. Please try again.'
               : result.error,
           variant: 'destructive',
-          
         });
-      } else{
+      } else {
         toast({
           title: 'Success',
           description: 'Signed in successfully',
         });
-       
       }
+
       if(result?.url){
         const url = new URL(result.url, window.location.origin);
-      if (url.origin === window.location.origin) {
-        router.replace(result.url);
-      } else {
-        window.location.href = result.url;
-      }
+        if (url.origin === window.location.origin) {
+          router.replace(result.url);
+        } else {
+          window.location.href = result.url;
+        }
       }
     } catch (error) {
       toast({
@@ -77,13 +76,17 @@ const Page = () => {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen bg-gray-800">
-      <div className="w-full max-w-md p-8 space-y-8 bg-white rounded-lg shadow-md">
-        <div className="text-center">
-          <h1 className="text-4xl font-extrabold tracking-tight lg:text-5xl mb-6">
+    <div className="flex justify-center items-center min-h-screen bg-gray-800 relative " style={{ backgroundImage: 'url(/bgimg.png)', backgroundSize: 'cover', backgroundPosition: 'center' }}>
+      {/* Background Video */}
+     
+
+      {/* Main content */}
+      <div className="w-full  max-w-md p-8 space-y-8 bg-white bg-opacity-80 rounded-lg shadow-xl backdrop-blur-lg z-10 relative">
+        <div className="text-center ">
+          <h1 className="text-4xl  font-extrabold tracking-tight lg:text-5xl mb-6 text-indigo-800">
             Welcome Back to True Feedback
           </h1>
-          <p className="mb-4">Sign in to continue your secret conversations</p>
+          <p className="mb-4 text-indigo-600">Sign in to continue your secret conversations</p>
         </div>
         <Form {...form}>
           <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-6">
@@ -92,8 +95,8 @@ const Page = () => {
               control={form.control}
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Email/Username</FormLabel>
-                  <Input {...field} />
+                  <FormLabel className="text-indigo-800">Email/Username</FormLabel>
+                  <Input {...field} className="border-indigo-400" />
                   <FormMessage />
                 </FormItem>
               )}
@@ -103,13 +106,13 @@ const Page = () => {
               control={form.control}
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Password</FormLabel>
-                  <Input type="password" {...field} />
+                  <FormLabel className="text-indigo-800">Password</FormLabel>
+                  <Input type="password" {...field} className="border-indigo-400" />
                   <FormMessage />
                 </FormItem>
               )}
             />
-            <Button type="submit" className="w-full" disabled={isSubmitting}>
+            <Button type="submit" className="w-full bg-indigo-600 hover:bg-indigo-700 text-white" disabled={isSubmitting}>
               {isSubmitting ? 'Signing In...' : 'Sign In'}
             </Button>
           </form>
@@ -117,7 +120,7 @@ const Page = () => {
         <div className="text-center mt-4">
           <p>
             Not a member yet?{' '}
-            <Link href="/sign-up" className="text-blue-600 hover:text-blue-800">
+            <Link href="/sign-up" className="text-indigo-600 hover:text-indigo-800">
               Sign up
             </Link>
           </p>
