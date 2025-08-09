@@ -44,9 +44,9 @@ An application that allows users to send and receive anonymous messages. It prov
 ## 6.Visit http://localhost:3000 to access the app locally.
 
 ## Usage
-   # Send a Message: Navigate to the message input area and type your message. Once submitted, it will be sent anonymously.
+ Send a Message: Navigate to the message input area and type your message. Once submitted, it will be sent anonymously.
 
-   # View Messages: View all received anonymous messages in your inbox or main dashboard.
+ View Messages: View all received anonymous messages in your inbox or main dashboard.
 
 The project is deployed on Vercel for easy access and scalability.
 
