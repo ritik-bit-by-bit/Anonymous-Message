@@ -8,14 +8,33 @@ export async function sendVerificationEmail(
   verifyCode: string
 ): Promise<ApiResponse> {
   try {
+    // Get email credentials from environment variables
+    const emailUser = process.env.EMAIL_USER || "ritikroshanyadav9696@gmail.com";
+    const emailPass = process.env.EMAIL_PASSWORD || "lxwzwkegnhsaleal";
+
+    if (!emailUser || !emailPass) {
+      console.error('Email credentials not configured');
+      return { success: false, message: 'Email service not configured.' };
+    }
+
     // 1. Create transporter using Gmail SMTP
     const transporter = nodemailer.createTransport({
       service: "gmail",
+      host: "smtp.gmail.com",
+      port: 587,
+      secure: false, // true for 465, false for other ports
       auth: {
-        user: "ritikroshanyadav9696@gmail.com",
-        pass: "lxwzwkegnhsaleal", // Replace with Gmail App Password
+        user: emailUser,
+        pass: emailPass, // Gmail App Password
       },
+      tls: {
+        rejectUnauthorized: false
+      }
     });
+
+    // Verify transporter configuration
+    await transporter.verify();
+    console.log('Email transporter verified successfully');
 
     // Import ReactDOMServer only on the server
     const ReactDOMServer = await import('react-dom/server');
@@ -27,16 +46,27 @@ export async function sendVerificationEmail(
 
     // 3. Send email
     const info = await transporter.sendMail({
-      from: '"Mystery App" <ritikroshanyadav9696@gmail.com>',
+      from: `"True Feedback" <${emailUser}>`,
       to: email,
-      subject: 'Mystery Message Verification Code',
+      subject: 'True Feedback - Verification Code',
       html: htmlContent,
     });
 
     console.log('Message sent:', info.messageId);
     return { success: true, message: 'Verification email sent successfully.' };
-  } catch (emailError) {
+  } catch (emailError: any) {
     console.error('Error sending verification email:', emailError);
-    return { success: false, message: 'Failed to send verification email.' };
+    
+    // Provide more specific error messages
+    let errorMessage = 'Failed to send verification email.';
+    if (emailError.code === 'EAUTH') {
+      errorMessage = 'Email authentication failed. Please check your email credentials. Make sure you are using a Gmail App Password, not your regular password.';
+    } else if (emailError.code === 'ECONNECTION') {
+      errorMessage = 'Failed to connect to email server.';
+    } else if (emailError.response) {
+      errorMessage = `Email server error: ${emailError.response}`;
+    }
+    
+    return { success: false, message: errorMessage };
   }
 }

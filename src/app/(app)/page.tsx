@@ -9,29 +9,59 @@ import {
   CarouselContent,
   CarouselItem,
 } from '@/components/ui/carousel';
+import FloatingLines from '@/components/FloatingLines';
+import SplitText from '@/components/SplitText';
 
 export default function Home() {
   return (
     <div className="flex flex-col min-h-screen relative">
-       <video
-        autoPlay
-        muted
-        loop
-        className="absolute top-0 left-0 w-full h-full object-cover opacity-90 z-0"
-      >
-        <source src="/bgvid.mp4" type="video/mp4" />
-        Your browser does not support the video tag.
-      </video>
+      <div style={{ width: '100%', height: '100vh', position: 'fixed', top: 0, left: 0, zIndex: 0 }}>
+        <FloatingLines 
+          enabledWaves={['top', 'middle', 'bottom']}
+          lineCount={18}
+          lineDistance={81}
+          bendRadius={25.5}
+          bendStrength={0}
+          interactive={true}
+          parallax={true}
+        />
+      </div>
 
       {/* Main content */}
-      <main className="flex-grow flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8 py-16 z-10 relative">
-        <section className="text-center mb-12 max-w-3xl">
-          <h1 className="text-4xl sm:text-5xl lg:text-6xl font-extrabold text-white tracking-tight mb-4">
-            Discover Anonymous Feedback
-          </h1>
-          <p className="text-lg sm:text-xl text-indigo-200 leading-relaxed">
-            True Feedback - Share your thoughts with complete privacy
-          </p>
+      <main className="flex-grow flex flex-col items-center justify-center px-4 sm:px-6 lg:px-8 py-16 z-10 relative pt-24 sm:pt-28">
+        <section className="text-center mb-12 max-w-3xl w-full">
+          <div className="mb-6">
+            <SplitText
+              text="Discover Anonymous Feedback"
+              className="font-heading text-4xl sm:text-5xl lg:text-6xl xl:text-7xl font-bold text-white tracking-tight mb-4 block w-full drop-shadow-2xl"
+              delay={100}
+              duration={0.6}
+              ease="power3.out"
+              splitType="chars"
+              from={{ opacity: 0, y: 40 }}
+              to={{ opacity: 1, y: 0 }}
+              threshold={0.1}
+              rootMargin="-100px"
+              textAlign="center"
+              tag="h1"
+            />
+          </div>
+          <div className="mt-4">
+            <SplitText
+              text="True Feedback - Share your thoughts with complete privacy"
+              className="text-lg sm:text-xl lg:text-2xl text-blue-900 leading-relaxed block w-full font-semibold tracking-wide drop-shadow-md"
+              delay={50}
+              duration={0.6}
+              ease="power3.out"
+              splitType="words"
+              from={{ opacity: 0, y: 30 }}
+              to={{ opacity: 1, y: 0 }}
+              threshold={0.1}
+              rootMargin="-100px"
+              textAlign="center"
+              tag="p"
+            />
+          </div>
         </section>
 
         {/* Carousel for Messages */}
@@ -42,17 +72,22 @@ export default function Home() {
           <CarouselContent>
             {messages.map((message, index) => (
               <CarouselItem key={index} className="p-4">
-                <Card className="bg-white/95 backdrop-blur-sm border-none shadow-lg hover:shadow-xl transition-all duration-300">
+                <Card 
+                  className="border-2 border-white rounded-xl shadow-lg hover:shadow-xl transition-all duration-300"
+                  style={{
+                    background: 'linear-gradient(to bottom right, #ffffff 0%, #e8e0f0 30%, #cabadb 70%, #a896c5 100%)',
+                  }}
+                >
                   <CardHeader>
-                    <CardTitle className="text-lg font-semibold text-indigo-900">
+                    <CardTitle className="text-lg font-semibold text-gray-800">
                       {message.title}
                     </CardTitle>
                   </CardHeader>
                   <CardContent className="flex items-start space-x-4">
-                    <Mail className="flex-shrink-0 text-indigo-600 w-6 h-6 mt-1" />
+                    <Mail className="flex-shrink-0 text-indigo-700 w-6 h-6 mt-1" />
                     <div>
                       <p className="text-gray-700 leading-relaxed">{message.content}</p>
-                      <p className="text-xs text-gray-500 mt-2">
+                      <p className="text-xs text-gray-600 mt-2">
                         {message.received}
                       </p>
                     </div>
@@ -63,11 +98,6 @@ export default function Home() {
           </CarouselContent>
         </Carousel>
       </main>
-
-      {/* Footer */}
-      <footer className="text-center py-7 bg-gradient-to-tl from-blue-950 to-violet-800 text-indigo-200 mt-auto z-10 relative">
-        <p className="text-sm">© 2025 True Feedback. All rights reserved.</p>
-      </footer>
     </div>
   );
 }
